@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Azure Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 40px;
+            text-align: center;
+        }
+        #chat-box {
+            width: 60%;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #0078D7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #005fa3;
+        }
+        #response {
+            margin-top: 20px;
+            text-align: left;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-box">
+        <h2>Azure OpenAI Chatbot</h2>
+        <textarea id="user_input" placeholder="Type your message here..."></textarea><br>
+        <button onclick="sendMessage()">Send</button>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById("user_input").value;
+            const responseDiv = document.getElementById("response");
+
+            responseDiv.innerHTML = "Loading...";
+
+            try {
+                const res = await fetch("/chatapi", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ user_input: userInput })
+                });
+
+                const data = await res.json();
+                responseDiv.innerHTML = `<strong>Response:</strong><br>${data.response}`;
+            } catch (error) {
+                responseDiv.innerHTML = "Error communicating with the API.";
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
